@@ -16,7 +16,7 @@ cache:
 # Adapt as necessary starting from here
 
 build_script:
-  - C:\Miniconda3-x64\condabin\conda install tensorflow
+  - C:\Miniconda3-x64\Scripts\conda install tensorflow
   - travis-tool.sh install_deps
 
 test_script:
