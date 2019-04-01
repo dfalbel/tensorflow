@@ -20,6 +20,7 @@ cache:
 
 build_script:
   - C:\Miniconda3-x64\Scripts\conda install -y tensorflow
+  - C:\Miniconda3-x64\Scripts\conda install -c anaconda -y numpy
   - travis-tool.sh install_deps
 
 test_script:
