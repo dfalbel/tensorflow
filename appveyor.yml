@@ -19,7 +19,7 @@ cache:
 # Adapt as necessary starting from here
 
 build_script:
-  - C:\Miniconda3-x64\Scripts\conda install -c anaconda -y numpy
+  - C:\Miniconda3-x64\Scripts\conda install -y numpy=1.8.1
   - C:\Miniconda3-x64\Scripts\conda install -y tensorflow
   - travis-tool.sh install_deps
 
