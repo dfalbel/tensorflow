@@ -16,7 +16,7 @@ cache:
 # Adapt as necessary starting from here
 
 build_script:
-  - C:\Miniconda36-x64\Scripts\conda create -y --name r-tensorflow tensorflow numpy
+  - C:\Miniconda36-x64\Scripts\conda create -y --name r-tensorflow tensorflow numpy python=3.6.8
   - travis-tool.sh install_deps
 
 test_script:
