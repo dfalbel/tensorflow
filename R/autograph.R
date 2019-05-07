@@ -1,41 +1,52 @@
+get_and_clean_env <- rlang::expr({
+  env <- as.list(environment())
+  env[["__true_fn__"]] <- NULL
+  env[["__false_fn__"]] <- NULL
+  env
+})
+
 control_ops <- list(
   "if" = function(cond, body, orelse = NULL) {
-    attr(cond, "expr") <- rlang::enexpr(cond)
-    attr(cond, "env") <- rlang::caller_env()
-    UseMethod("if", cond)
-  },
 
-  "if.default" =  function(cond, body, orelse = NULL) {
+    `if` <- .Primitive("if")
 
-    cond_ <- attr(cond, "expr")
-    env_ <- attr(cond, "env")
-
+    env_ <- rlang::caller_env()
+    cond_ <- rlang::enexpr(cond)
     body_ <- rlang::enexpr(body)
     orelse_ <- rlang::enexpr(orelse)
 
+    if (inherits(cond, "tensorflow.tensor")) {
+      control_ops$`if.tensorflow.tensor`(cond_, body_, orelse_, env_)
+    } else {
+      control_ops$`if.default`(cond_, body_, orelse_, env_)
+    }
+
+  },
+
+  "if.default" =  function(cond_, body_, orelse_ = NULL, env_) {
     e_ <- rlang::expr(base::`if`(!!cond_, !!body_, !!orelse_))
 
     val <- rlang::eval_bare(e_, env = env_)
     invisible(val)
   },
 
-  "if.tensorflow.tensor" = function(cond, body, orelse = NULL) {
-
-    cond_ <- attr(cond, "expr")
-    env_ <- attr(cond, "env")
-
-    body_ <- rlang::enexpr(body)
-    orelse_ <- rlang::enexpr(orelse)
+  "if.tensorflow.tensor" = function(cond_, body_, orelse_ = NULL, env_) {
 
     true_fn <- rlang::new_function(
       args = NULL,
-      body = rlang::expr({`__res__`<- eval(!!body_, envir = environment()); as.list(environment())}),
+      body = rlang::expr({
+        `__res__`<- eval(!!body_, envir = environment())
+        !!get_and_clean_env
+      }),
       env = env_
     )
 
     false_fn <- rlang::new_function(
       args = NULL,
-      body = rlang::expr({`__res__`<- eval(!!orelse_, envir = environment()); as.list(environment())}),
+      body = rlang::expr({
+        `__res__`<- eval(!!orelse_, envir = environment())
+        !!get_and_clean_env
+      }),
       env = env_
     )
 
