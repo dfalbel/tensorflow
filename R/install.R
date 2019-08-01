@@ -61,7 +61,13 @@ install_tensorflow <- function(method = c("auto", "virtualenv", "conda"),
   package <- ver$package
 
   # Packages in this list should always be installed.
-  default_packages <- c("tensorflow-hub")
+  default_packages <- c(
+    "tensorflow-hub",
+    "h5py", "pyyaml",
+    "requests",
+    "Pillow",
+    "scipy"
+  )
 
   # Resolve TF probability version.
   if (!is.na(version) && substr(version, 1, 4) %in% c("1.12", "1.13", "1.14")) {
@@ -80,6 +86,7 @@ install_tensorflow <- function(method = c("auto", "virtualenv", "conda"),
     conda          = conda,
     python_version = conda_python_version,
     pip            = TRUE,
+    pip_ignore_installed = FALSE,
     ...
   )
 
