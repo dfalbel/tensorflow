@@ -22,6 +22,7 @@ jobs:
       PIP_NO_WARN_SCRIPT_LOCATION: false
       RETICULATE_AUTOCONFIGURE: 'FALSE'
       CRAN: ${{ matrix.cran }}
+      CURL_CA_BUNDLE: ""
 
     steps:
       - uses: actions/checkout@v1
